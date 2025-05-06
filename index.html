@@ -16,7 +16,6 @@
       classifier = ml5.imageClassifier('MobileNet', () => {
         document.getElementById('status').innerText = "Modell geladen. Du kannst jetzt ein Bild hochladen.";
 
-        // Beispielbilder klassifizieren, sobald Modell geladen ist
         document.querySelectorAll('.example-img').forEach(img => {
           classifyExample(img);
         });
@@ -33,11 +32,23 @@
     }
 
     function classifyImage(imgElement) {
+      const feedback = document.getElementById("user-feedback");
+      feedback.innerText = "Klassifikation läuft...";
+
       classifier.classify(imgElement, (err, results) => {
         if (err) {
           console.error(err);
+          feedback.innerText = "Fehler bei der Klassifikation.";
           return;
         }
+
+        if (!results || results.length === 0) {
+          feedback.innerText = "Keine Ergebnisse erhalten.";
+          return;
+        }
+
+        const best = results[0];
+        feedback.innerText = `Erkannt als: ${best.label} (${Math.round(best.confidence * 100)}%)`;
         displayResults(results);
       });
     }
@@ -59,6 +70,8 @@
           }]
         },
         options: {
+          responsive: true,
+          maintainAspectRatio: false,
           scales: {
             y: {
               beginAtZero: true,
@@ -156,6 +169,7 @@
         <div class="column">
           <input type="file" accept="image/*" onchange="handleFile(this)" />
           <img id="user-image" width="300" />
+          <p id="user-feedback" style="margin-top: 0.5rem; font-weight: bold;"></p>
         </div>
         <div class="column">
           <canvas id="userChart" width="400" height="300"></canvas>
