@@ -55,7 +55,11 @@ input[type="file"] {
 }
 
 canvas {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.1);
-}
+    min-height: 200px;
+    width: 100% !important;
+    height: auto !important;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    margin-top: 10px;
+  }
