@@ -80,6 +80,9 @@
           }
         }
       });
+
+      document.getElementById("user-feedback").innerText = `Erkannt als: ${results[0].label} (${Math.round(results[0].confidence * 100)}%)`;
+
     }
 
     function classifyExample(imgElement) {
