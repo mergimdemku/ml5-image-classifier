@@ -217,37 +217,46 @@
     }
 
     function displayResults(results) {
-      const labels = results.map(r => String(r.label));
-      const confidences = results.map(r => Math.round(Number(r.confidence) * 100));
-
-      const canvas = document.getElementById('userChart');
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      if (userChart) userChart.destroy();
-
-      userChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Confidence (%)',
-            data: confidences,
-            backgroundColor: 'rgba(54, 162, 235, 0.7)'
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-              max: 100
-            }
+    const canvas = document.getElementById('userChart');
+    if (!canvas) {
+      console.error('Canvas-Element #userChart nicht gefunden!');
+      return;
+    }
+  
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      console.error('Canvas-Kontext konnte nicht geladen werden!');
+      return;
+    }
+  
+    const labels = results.map(r => String(r.label));
+    const confidences = results.map(r => Math.round(Number(r.confidence) * 100));
+  
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (userChart) userChart.destroy();
+  
+    userChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Confidence (%)',
+          data: confidences,
+          backgroundColor: 'rgba(54, 162, 235, 0.7)'
+        }]
+      },
+      options: {
+        responsive true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100
           }
         }
-      });
-    }
+      }
+    });
+  }
 
     function classifyExample(imgElement) {
       if (!classifier) return;
@@ -289,3 +298,5 @@
   </script>
 </body>
 </html>
+
+  
