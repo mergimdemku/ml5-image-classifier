@@ -2,297 +2,72 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Bilderkennung mit ml5.js</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
   <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    :root {
-      --bg: #f8fafc;
-      --text: #1f2937;
-      --primary: #3b82f6;
-      --card: #ffffff;
-      --shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      margin: 0;
-      padding: 2rem;
-    }
-
-    main {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    h1, h2 {
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    #status {
-      margin-bottom: 2rem;
-      font-weight: 500;
-      color: var(--primary);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2rem;
-      margin-bottom: 3rem;
-    }
-
-    .grid div {
-      background: var(--card);
-      padding: 1rem;
-      border-radius: 1rem;
-      box-shadow: var(--shadow);
-    }
-
-    .user-upload {
-      margin-top: 3rem;
-    }
-
-    .row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
-    }
-
-    .column {
-      flex: 1;
-      min-width: 280px;
-      background: var(--card);
-      padding: 1rem;
-      border-radius: 1rem;
-      box-shadow: var(--shadow);
-    }
-
-    img {
-      max-width: 100%;
-      border-radius: 0.75rem;
-    }
-
-    input[type="file"] {
-      margin-bottom: 1rem;
-    }
-
-    canvas {
-      width: 100% !important;
-      height: 250px !important;
-      background: #fff;
-      border-radius: 0.75rem;
-      box-shadow: var(--shadow);
-      margin-top: 1rem;
-      padding: 1rem;
-    }
-
-    #user-feedback {
-      margin-top: 0.5rem;
-      font-weight: bold;
-      color: var(--primary);
-    }
-
-    .discussion {
-      margin-top: 3rem;
-      background: var(--card);
-      padding: 1.5rem;
-      border-radius: 1rem;
-      box-shadow: var(--shadow);
-    }
+    body { font-family: sans-serif; background: #f4f4f4; padding: 2rem; }
+    #user-image { max-width: 300px; margin-bottom: 1rem; border-radius: 8px; }
+    canvas { background: white; padding: 10px; border-radius: 10px; width: 100%; max-width: 500px; }
+    .container { display: flex; flex-direction: column; align-items: center; }
+    #user-feedback { font-weight: bold; margin-top: 1rem; }
   </style>
 </head>
 <body>
-  <main>
-    <h1>Bilderkennung (Klassifikation) mit ml5.js</h1>
-    <p id="status">Modell wird geladen...</p>
-
-    <section class="examples">
-      <h2>Korrekt klassifizierte Bilder</h2>
-      <div class="grid">
-        <div>
-          <img src="images/apple.jpg" alt="apple" class="example-img">
-          <canvas></canvas>
-        </div>
-        <div>
-          <img src="images/laptop.jpg" alt="laptop" class="example-img">
-          <canvas></canvas>
-        </div>
-        <div>
-          <img src="images/dog.jpg" alt="dog" class="example-img">
-          <canvas></canvas>
-        </div>
-      </div>
-
-      <h2>Falsch klassifizierte Bilder</h2>
-      <div class="grid">
-        <div>
-          <img src="images/wrong1.jpg" alt="wrong1" class="example-img">
-          <canvas></canvas>
-        </div>
-        <div>
-          <img src="images/wrong2.jpg" alt="wrong2" class="example-img">
-          <canvas></canvas>
-        </div>
-        <div>
-          <img src="images/wrong3.jpg" alt="wrong3" class="example-img">
-          <canvas></canvas>
-        </div>
-      </div>
-    </section>
-
-    <section class="user-upload">
-      <h2>Eigenes Bild hochladen</h2>
-      <div class="row">
-        <div class="column">
-          <input type="file" accept="image/*" onchange="handleFile(this)" />
-          <img id="user-image" />
-          <p id="user-feedback"></p>
-        </div>
-        <div class="column">
-          <canvas id="userChart"></canvas>
-        </div>
-      </div>
-    </section>
-
-    <section class="discussion">
-      <h2>Diskussion</h2>
-      <p>Die Bilderkennung mit MobileNet zeigte bei gut beleuchteten, klaren Bildern sehr hohe Genauigkeit. Beispielsweise wurde ein Hund, ein Laptop und ein Apfel korrekt erkannt. Bei Bildern mit ungewöhnlichen Winkeln, verdeckten Objekten oder verfremdeten Farben kam es jedoch zu Fehlklassifikationen. Die Confidence-Werte waren bei korrekten Bildern meist über 80 %, bei falschen deutlich darunter. Die Klassifikation ist stark abhängig von den Trainingsdaten des Modells und den visuellen Merkmalen des Bildes. Besonders bei künstlich bearbeiteten Bildern ließ die Zuverlässigkeit nach. Für den Einsatz in realen Anwendungen sollte die Bildqualität beachtet und ggf. mit anderen Modellen verglichen werden.</p>
-    </section>
-  </main>
+  <div class="container">
+    <h1>Bilderkennung (ml5.js)</h1>
+    <input type="file" accept="image/*" onchange="handleFile(this)">
+    <img id="user-image" />
+    <p id="user-feedback">Modell wird geladen...</p>
+    <canvas id="userChart"></canvas>
+  </div>
 
   <script>
     let classifier;
     let userChart;
 
-    window.addEventListener('DOMContentLoaded', () => {
+    window.onload = () => {
       classifier = ml5.imageClassifier('MobileNet', () => {
-        document.getElementById('status').innerText = "Modell geladen. Du kannst jetzt ein Bild hochladen.";
-        document.querySelectorAll('.example-img').forEach(img => {
-          classifyExample(img);
-        });
+        document.getElementById('user-feedback').innerText = "Modell geladen. Lade ein Bild hoch!";
       });
-    });
+    };
 
     function handleFile(input) {
       const file = input.files[0];
       if (!file) return;
 
-      const imgElement = document.getElementById('user-image');
-      imgElement.src = URL.createObjectURL(file);
-
-      imgElement.onload = () => {
-        console.log("Bild geladen, starte Klassifikation");
-        classifyImage(imgElement);
-      };
+      const img = document.getElementById('user-image');
+      img.src = URL.createObjectURL(file);
+      img.onload = () => classifyImage(img);
     }
 
     function classifyImage(imgElement) {
-      const feedback = document.getElementById("user-feedback");
-      feedback.innerText = "Klassifikation läuft...";
-
+      document.getElementById('user-feedback').innerText = "Klassifiziere...";
       classifier.classify(imgElement, (err, results) => {
-        if (err) {
-          console.error(err);
-          feedback.innerText = "Fehler bei der Klassifikation.";
+        if (err || !results) {
+          document.getElementById('user-feedback').innerText = "Fehler bei der Klassifikation.";
           return;
         }
 
-        if (!results || results.length === 0) {
-          feedback.innerText = "Keine Ergebnisse erhalten.";
-          return;
-        }
+        const ctx = document.getElementById('userChart').getContext('2d');
+        if (userChart) userChart.destroy();
 
-        const best = results[0];
-        feedback.innerText = `Erkannt als: ${best.label} (${Math.round(best.confidence * 100)}%)`;
-        displayResults(results);
-        console.log("Ergebnisse erfolgreich angezeigt.");
-      });
-    }
+        const labels = results.map(r => r.label);
+        const confidences = results.map(r => Math.round(r.confidence * 100));
 
-    function displayResults(results) {
-  try {
-    const canvas = document.getElementById('userChart');
-    if (!canvas) {
-      throw new Error("Canvas-Element 'userChart' nicht gefunden.");
-    }
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) {
-      throw new Error("2D-Kontext konnte nicht erstellt werden.");
-    }
-
-    // Optional: Canvas löschen
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (userChart) userChart.destroy();
-
-    const labels = results.map(r => r.label);
-    const confidences = results.map(r => Math.round(r.confidence * 100));
-
-    userChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Confidence (%)',
-          data: confidences,
-          backgroundColor: 'rgba(75, 192, 192, 0.7)'
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          y: {
-            beginAtZero: true,
-            max: 100
-          }
-        }
-      }
-    });
-
-    // Ergebnis sichtbar machen
-    document.getElementById("user-feedback").innerText = `Erkannt als: ${results[0].label} (${Math.round(results[0].confidence * 100)}%)`;
-
-  } catch (err) {
-    console.error("Fehler beim Zeichnen der Klassifikation:", err);
-    document.getElementById("user-feedback").innerText = "Fehler bei der Klassifikation.";
-  }
-}
-
-    function classifyExample(imgElement) {
-      if (!classifier) return;
-
-      classifier.classify(imgElement, (err, results) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-
-        const canvas = imgElement.nextElementSibling;
-        const ctx = canvas.getContext("2d");
-        const label = results[0].label;
-        const confidence = Math.round(results[0].confidence * 100);
-
-        new Chart(ctx, {
+        userChart = new Chart(ctx, {
           type: 'bar',
           data: {
-            labels: [label],
+            labels: labels,
             datasets: [{
               label: 'Confidence (%)',
-              data: [confidence],
+              data: confidences,
               backgroundColor: 'rgba(75, 192, 192, 0.7)'
             }]
           },
           options: {
-            responsive: true,
-            maintainAspectRatio: false,
             scales: {
               y: {
                 beginAtZero: true,
@@ -301,10 +76,11 @@
             }
           }
         });
+
+        document.getElementById('user-feedback').innerText =
+          `Erkannt: ${results[0].label} (${Math.round(results[0].confidence * 100)}%)`;
       });
     }
   </script>
 </body>
 </html>
-
-  
