@@ -212,28 +212,23 @@
         const best = results[0];
         feedback.innerText = `Erkannt als: ${best.label} (${Math.round(best.confidence * 100)}%)`;
         displayResults(results);
+        console.log("Ergebnisse erfolgreich angezeigt.");
       });
     }
 
     function displayResults(results) {
+  try {
     const canvas = document.getElementById('userChart');
-    if (!canvas) {
-      console.error('Canvas-Element #userChart nicht gefunden!');
-      return;
-    }
-  
+    if (!canvas) throw new Error("Canvas #userChart nicht gefunden.");
     const ctx = canvas.getContext('2d');
-    if (!ctx) {
-      console.error('Canvas-Kontext konnte nicht geladen werden!');
-      return;
-    }
-  
-    const labels = results.map(r => String(r.label));
-    const confidences = results.map(r => Math.round(Number(r.confidence) * 100));
-  
+    if (!ctx) throw new Error("Canvas-Kontext konnte nicht erstellt werden.");
+
+    const labels = results.map(r => r.label);
+    const confidences = results.map(r => Math.round(r.confidence * 100));
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (userChart) userChart.destroy();
-  
+
     userChart = new Chart(ctx, {
       type: 'bar',
       data: {
@@ -245,7 +240,7 @@
         }]
       },
       options: {
-        responsive,
+        responsive: true,
         maintainAspectRatio: false,
         scales: {
           y: {
@@ -255,7 +250,12 @@
         }
       }
     });
+
+  } catch (err) {
+    console.error("Fehler beim Darstellen der Klassifikation:", err);
+    document.getElementById("user-feedback").innerText = "Ergebnis konnte nicht dargestellt werden.";
   }
+}
 
     function classifyExample(imgElement) {
       if (!classifier) return;
