@@ -219,15 +219,21 @@
     function displayResults(results) {
   try {
     const canvas = document.getElementById('userChart');
-    if (!canvas) throw new Error("Canvas #userChart nicht gefunden.");
+    if (!canvas) {
+      throw new Error("Canvas-Element 'userChart' nicht gefunden.");
+    }
+
     const ctx = canvas.getContext('2d');
-    if (!ctx) throw new Error("Canvas-Kontext konnte nicht erstellt werden.");
+    if (!ctx) {
+      throw new Error("2D-Kontext konnte nicht erstellt werden.");
+    }
+
+    // Optional: Canvas löschen
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (userChart) userChart.destroy();
 
     const labels = results.map(r => r.label);
     const confidences = results.map(r => Math.round(r.confidence * 100));
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (userChart) userChart.destroy();
 
     userChart = new Chart(ctx, {
       type: 'bar',
@@ -236,7 +242,7 @@
         datasets: [{
           label: 'Confidence (%)',
           data: confidences,
-          backgroundColor: 'rgba(54, 162, 235, 0.7)'
+          backgroundColor: 'rgba(75, 192, 192, 0.7)'
         }]
       },
       options: {
@@ -251,9 +257,12 @@
       }
     });
 
+    // Ergebnis sichtbar machen
+    document.getElementById("user-feedback").innerText = `Erkannt als: ${results[0].label} (${Math.round(results[0].confidence * 100)}%)`;
+
   } catch (err) {
-    console.error("Fehler beim Darstellen der Klassifikation:", err);
-    document.getElementById("user-feedback").innerText = "Ergebnis konnte nicht dargestellt werden.";
+    console.error("Fehler beim Zeichnen der Klassifikation:", err);
+    document.getElementById("user-feedback").innerText = "Fehler bei der Klassifikation.";
   }
 }
 
