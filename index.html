@@ -15,7 +15,6 @@
     window.addEventListener('DOMContentLoaded', () => {
       classifier = ml5.imageClassifier('MobileNet', () => {
         document.getElementById('status').innerText = "Modell geladen. Du kannst jetzt ein Bild hochladen.";
-
         document.querySelectorAll('.example-img').forEach(img => {
           classifyExample(img);
         });
@@ -28,7 +27,11 @@
 
       const imgElement = document.getElementById('user-image');
       imgElement.src = URL.createObjectURL(file);
-      imgElement.onload = () => classifyImage(imgElement);
+
+      imgElement.onload = () => {
+        console.log("Bild geladen, starte Klassifikation");
+        classifyImage(imgElement);
+      };
     }
 
     function classifyImage(imgElement) {
@@ -80,9 +83,6 @@
           }
         }
       });
-
-      document.getElementById("user-feedback").innerText = `Erkannt als: ${results[0].label} (${Math.round(results[0].confidence * 100)}%)`;
-
     }
 
     function classifyExample(imgElement) {
