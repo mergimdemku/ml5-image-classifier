@@ -15,6 +15,11 @@
     window.addEventListener('DOMContentLoaded', () => {
       classifier = ml5.imageClassifier('MobileNet', () => {
         document.getElementById('status').innerText = "Modell geladen. Du kannst jetzt ein Bild hochladen.";
+
+        // Beispielbilder klassifizieren, sobald Modell geladen ist
+        document.querySelectorAll('.example-img').forEach(img => {
+          classifyExample(img);
+        });
       });
     });
 
@@ -65,11 +70,17 @@
     }
 
     function classifyExample(imgElement) {
+      if (!classifier) {
+        console.warn("Modell noch nicht bereit.");
+        return;
+      }
+
       classifier.classify(imgElement, (err, results) => {
         if (err) {
           console.error(err);
           return;
         }
+        console.log("Klassifikationsergebnis:", results);
         const canvas = imgElement.nextElementSibling;
         const ctx = canvas.getContext("2d");
         const label = results[0].label;
@@ -86,6 +97,8 @@
             }]
           },
           options: {
+            responsive: true,
+            maintainAspectRatio: false,
             scales: {
               y: {
                 beginAtZero: true,
@@ -107,15 +120,15 @@
       <h2>Korrekt klassifizierte Bilder</h2>
       <div class="grid">
         <div>
-          <img src="images/apple.jpg" alt="apple" onload="classifyExample(this)">
+          <img src="images/apple.jpg" alt="apple" class="example-img">
           <canvas></canvas>
         </div>
         <div>
-          <img src="images/laptop.jpg" alt="laptop" onload="classifyExample(this)">
+          <img src="images/laptop.jpg" alt="laptop" class="example-img">
           <canvas></canvas>
         </div>
         <div>
-          <img src="images/dog.jpg" alt="dog" onload="classifyExample(this)">
+          <img src="images/dog.jpg" alt="dog" class="example-img">
           <canvas></canvas>
         </div>
       </div>
@@ -123,15 +136,15 @@
       <h2>Falsch klassifizierte Bilder</h2>
       <div class="grid">
         <div>
-          <img src="images/wrong1.jpg" alt="wrong1" onload="classifyExample(this)">
+          <img src="images/wrong1.jpg" alt="wrong1" class="example-img">
           <canvas></canvas>
         </div>
         <div>
-          <img src="images/wrong2.jpg" alt="wrong2" onload="classifyExample(this)">
+          <img src="images/wrong2.jpg" alt="wrong2" class="example-img">
           <canvas></canvas>
         </div>
         <div>
-          <img src="images/wrong3.jpg" alt="wrong3" onload="classifyExample(this)">
+          <img src="images/wrong3.jpg" alt="wrong3" class="example-img">
           <canvas></canvas>
         </div>
       </div>
