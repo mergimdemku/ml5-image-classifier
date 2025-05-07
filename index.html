@@ -106,6 +106,14 @@
       border-radius: 1rem;
       box-shadow: var(--shadow);
     }
+
+    .documentation {
+      margin-top: 3rem;
+      background: var(--card);
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: var(--shadow);
+    }
   </style>
 </head>
 <body>
@@ -163,22 +171,22 @@
 
     <section class="discussion">
         <h2>Diskussion</h2>
-        <p>Die Klassifikation mit dem vortrainierten Modell MobileNet hat gut bei klaren, typischen Motiven funktioniert – etwa bei erkennbaren Alltagsgegenständen oder Tieren mit charakteristischen Merkmalen. Bei den korrekt erkannten Bildern (wie Laptop oder Hund) lag die Confidence häufig über 80 %. Schwieriger war es bei untypischen Perspektiven, abstrakten Bildern oder stark verfremdeten Farben. Hier kam es zu Fehlklassifikationen, da das Modell solche Fälle aus dem Trainingsdatensatz nicht kennt. Auch bei künstlich manipulierten oder überbelichteten Bildern nahm die Erkennungsrate deutlich ab. Das zeigt, wie stark das Modell von seinem Trainingsdatensatz abhängt. Insgesamt ist MobileNet jedoch effizient und liefert bei typischen Eingaben gute Resultate. Für produktive Anwendungen sollte man ggf. ein spezialisiertes Modell einsetzen. Durch das Feedback-System mit Confidence-Werten erhält der Nutzer eine Einschätzung zur Zuverlässigkeit des Ergebnisses.</p>
+        <p>Die Verwendung eines vortrainierten Modells wie MobileNet war für mich neu, aber überraschend einfach umsetzbar. Besonders lehrreich war zu sehen, wie bestehende Modelle direkt im Browser genutzt werden können, ohne dass ein eigenes Training nötig ist. Durch diese Arbeit habe ich viele neue Ideen entwickelt, wie man externe KI-Modelle oder APIs in eigene Projekte integrieren kann. Die Klassifikation hat gut funktioniert, wenn das Bildmotiv klar und isoliert war – beispielsweise bei einem Laptop oder Hund. Schwierigkeiten traten auf, wenn mehrere Objekte im Bild vorhanden waren, z. B. ein Mensch mit einem Hund, oder wenn das Objekt nicht vollständig sichtbar war. Bei kugelförmigem Obst oder Gemüse – etwa einem Apfel – kam es häufiger zu Verwechslungen mit Bällen oder ähnlichen Formen. Auch bei stark abstrahierten oder untypisch fotografierten Objekten sank die Erkennungsgenauigkeit. Die Confidence-Werte waren in solchen Fällen oft niedrig, was als hilfreiches Feedback diente. Insgesamt zeigt sich, dass die Stärke des Modells vor allem in der Erkennung typischer, im Training gut vertretener Objekte liegt. Trotzdem konnte ich den Prozess als gute Grundlage für kreative eigene Anwendungen nutzen.</p>
       </section>
       
-      <section class="documentation">
+    <section class="documentation">
         <h2>Technische Dokumentation</h2>
         <h3>1) Technisch</h3>
         <ul>
-          <li><strong>ml5.js:</strong> High-Level-Framework zur KI-Nutzung im Browser, basiert auf TensorFlow.js. Dient zur Bildklassifikation über das MobileNet-Modell.</li>
-          <li><strong>Chart.js:</strong> Visualisiert die Klassifikationsergebnisse als Balkendiagramm.</li>
-          <li><strong>p5.js:</strong> Wird automatisch von ml5 eingebunden, notwendig für einige API-Komponenten.</li>
-          <li><strong>HTML/JS/CSS:</strong> Aufbau der Anwendung, Darstellung und Logik der Benutzerinteraktion.</li>
+          <li><strong>ml5.js:</strong> wurde als zentrales Framework für die Bildklassifikation verwendet. Es baut auf TensorFlow.js auf und erlaubt den einfachen Zugriff auf vortrainierte Modelle wie MobileNet im Browser.</li>
+          <li><strong>Chart.js:</strong> diente zur Visualisierung der Klassifikationsergebnisse als interaktive Balkendiagramme.</li>
+          <li><strong>p5.js:</strong> wird automatisch durch ml5 geladen und stellt technische Basisfunktionen bereit, z. B. zur Bildverarbeitung.</li>
+          <li><strong>HTML/JS/CSS:</strong> Die Anwendung nutzt ausschließlich HTML, JavaScript und CSS und läuft komplett clientseitig im Browser – es ist kein Backend notwendig. </li>
         </ul>
-        <p>Besonderheit: Durch explizite Canvas-Initialisierung und Fehlerbehandlung wird sichergestellt, dass Klassifikation und Visualisierung stabil funktionieren, selbst bei problematischen Eingaben oder fehlenden Backends (WebGPU-Fallback).</p>
+        <p>Besonderheit: Eine Besonderheit der Umsetzung war die gezielte Fehlerbehandlung, um mit Browser-Inkompatibilitäten (z. B. WebGPU-Problemen) umzugehen.</p>
       
         <h3>2) Fachlich</h3>
-        <p>Die Anwendung nutzt ein vortrainiertes MobileNet-Modell zur Echtzeitklassifikation von Bildern im Browser. Die Logik basiert auf Event-Handling: Sobald der Nutzer ein Bild hochlädt, wird es klassifiziert und anschließend grafisch dargestellt. Die Visualisierung erlaubt dem Nutzer eine schnelle Einschätzung der Zuverlässigkeit der Klassifikation. Die Beispielbilder wurden manuell in korrekte und falsche Klassifikationen eingeteilt, basierend auf der Hauptlabel-Übereinstimmung. Für UX-Feedback wurden systematische Fehlermeldungen und Ladehinweise eingebaut. Alle Datenverarbeitungsprozesse erfolgen clientseitig ohne Backend. Quellen: ml5.js, TensorFlow.js, ImageNet-Datenbank.</p>
+        <p>Dies war mein erster praktischer Kontakt mit der Implementierung von Machine-Learning-Modellen in einer Webanwendung. Die anfängliche Komplexität bestand vor allem in der Kompatibilität der Framework-Versionen sowie im Verständnis der Bildklassifikationslogik. Ich habe dabei intensiv mit ChatGPT gearbeitet – hauptsächlich, um schnelle UI-Prototypen zu erstellen, Probleme zu debuggen und fehlende Funktionsbausteine zu vervollständigen. ChatGPT habe ich als Assistenzsystem genutzt, um pragmatische Lösungen zu finden und dabei gezielt einzelne Funktionen besser zu verstehen. Besonders hilfreich war das Tool beim Umgang mit Canvas-Elementen und bei der Fehlersuche im Zusammenspiel mit Chart.js. Insgesamt hat mir diese Aufgabe gezeigt, wie moderne KI-Anwendungen im Frontend eingesetzt werden können und wie man mit vorhandenen Werkzeugen (auch ohne tiefes Modellverständnis) funktionale Prototypen realisieren kann.</p>
       </section>
 
 
